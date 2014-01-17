@@ -12,16 +12,19 @@ function using() {
         resources.push(toResource(arguments[k])); 
     }
     var settled = Promise.settle(resources);
-    var fulfilled = settled.filter(isFulfilled).map(getValue);
-
-    var retval;
-    if (settled.length === fulfilled.length) {
-        retval = Promise.try(f, settled, this);
-    } else {
-        retval = Promise.reject(new Promise.RejectionError(
-            "Resource allocation failed"));
-    }
-    return retval.finally(cleanup(fulfilled));
+    return settled.then(function(all) { 
+        return all.filter(isFulfilled).map(getValue);
+    }).then(function(fulfilled) {
+        var retval;
+        if (settled.length === fulfilled.length) {
+            return Promise
+                .try(f, settled, this)
+                .finally(cleanup(fulfilled))
+        }
+        return Promise.reject(
+            new Promise.RejectionError("Resource allocation failed"))
+            .finally(cleanup(fulfilled));
+    });
 
 }
 
@@ -42,11 +45,6 @@ function cleanup(fulfilled) {
 }
 
 var cleanOne = Promise.method(function cleanOne(resource) {
-    return resource.then(findAndApplyDisposer);
-});
-
-
-function findAndApplyDisposer(resource) {
     for (var k = 0; k < disposers.length; ++k) {
         var test = disposers[k].test,
             dispose = disposers[k].dispose;        
@@ -55,7 +53,7 @@ function findAndApplyDisposer(resource) {
     }
     // what if there is no disposer?
     throw new Error("Unable to free resource");
-}
+});
 
 function tryCall(test, item) {
     try { return test(item); }
