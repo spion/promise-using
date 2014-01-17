@@ -8,10 +8,19 @@ todo
 
 # usage
 
+### using.registerDisposer
+
 ```ts
-using.registerDisposer(predicate: (resource:any) => boolean, dispose: (resource:any) => Promise<T>);
-using(...resources:Promise<T>[], fn: (...resources:any) => Promise<U>)
+(predicate: (resource:any) => boolean, 
+ dispose: (resource:any) => Promise<T>) => void;
 ```
+
+### using
+
+```ts
+(...resources:Promise<T>[], 
+ fn: (...resources:any) => Promise<U>) => Promise<any>
+```ts
 
 # license
 
