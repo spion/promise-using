@@ -7,19 +7,21 @@ function using() {
     var f = arguments[arglen - 1];
     if (typeof(f) !== 'function')
         throw new TypeError("Last argument must be a function");
+
     var resources = new Array(arglen - 1);
     for (var k = 0; k < arglen - 1; ++k) {
-        resources.push(toResource(arguments[k])); 
+        resources[k] = toResource(arguments[k]);
     }
     var settled = Promise.settle(resources);
     return settled.then(function(all) { 
         return all.filter(isFulfilled).map(getValue);
     }).then(function(fulfilled) {
         var retval;
-        if (settled.length === fulfilled.length) {
+        console.log(resources.length, fulfilled.length);
+        if (resources.length === fulfilled.length) {
             return Promise
-                .try(f, settled, this)
-                .finally(cleanup(fulfilled))
+            .try(f, fulfilled, this)
+            .finally(cleanup(fulfilled))
         }
         return Promise.reject(
             new Promise.RejectionError("Resource allocation failed"))
