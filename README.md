@@ -5,7 +5,6 @@ A resource management library for Bluebird
 # example
 
 ```js
-    var res = [create({}), create({failOpen: true}), create({})];
 function doWithResources(something) {
     return using(connectTo(src), connectTo(dst), function(src, dst) {
         return src.callApi.then(function(res) {
