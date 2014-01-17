@@ -20,7 +20,7 @@ todo
 ```ts
 (...resources:Promise<T>[], 
  fn: (...resources:any) => Promise<U>) => Promise<any>
-```ts
+```
 
 # license
 
