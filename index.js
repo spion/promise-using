@@ -17,7 +17,6 @@ function using() {
         return all.filter(isFulfilled).map(getValue);
     }).then(function(fulfilled) {
         var retval;
-        console.log(resources.length, fulfilled.length);
         if (resources.length === fulfilled.length) {
             return Promise
             .try(f, fulfilled, this)

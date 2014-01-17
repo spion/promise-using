@@ -22,7 +22,6 @@ t.test('resource alloc fails', function(t) {
         t.notOk(true, 'should not execute fn');
     }).catch(function(e) {
         return Promise.join(res[0], res[2]).spread(function(r0, r2) {
-            //console.log(r0, r2);
             t.ok(r0.closed && r2.closed, "should not leak resources");
         });
     });
@@ -36,9 +35,8 @@ t.test('function fails', function(t) {
         t.notOk(r.closed, 'resource should be available within function');
         throw new Error('function-failed');
     }).catch(function(e) {
-        t.equals(e.message, 'function-failed');
+        t.equals(e.message, 'function-failed', 'should fail because function failed');
         return r.then(function(r) {
-            console.log('unpacked resource', r);
             t.ok(r.closed, 'resource should be closed outside function');
         });
     });
