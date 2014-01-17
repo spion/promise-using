@@ -41,7 +41,7 @@ function getValue(i) { return i.value(); }
 
 function cleanup(fulfilled) {
     return function() {
-        // how to report failures to clean?
+        // how to report failures ?
         return Promise.settle(fulfilled.map(cleanOne));
     }
 }

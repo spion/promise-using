@@ -9,13 +9,10 @@ var using = require('../index');
 using.registerDisposer(function(r) {
     return r instanceof Resource;
 }, function(r) {
-    console.log("Disposer invoked!");
     return r.close();
 });
 
-/**************
- * tests
- **************/
+// tests
 
 var t = require('blue-tape');
 
@@ -34,13 +31,14 @@ t.test('resource alloc fails', function(t) {
 
 t.test('function fails', function(t) {
     var r = create({});
-    return using(create({}), function(r) {
+    return using(r, function(r) {
+        t.ok(r.opt, 'resource should have opt member');
         t.notOk(r.closed, 'resource should be available within function');
         throw new Error('function-failed');
     }).catch(function(e) {
         t.equals(e.message, 'function-failed');
         return r.then(function(r) {
-            console.log(r);
+            console.log('unpacked resource', r);
             t.ok(r.closed, 'resource should be closed outside function');
         });
     });
