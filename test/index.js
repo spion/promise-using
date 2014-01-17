@@ -67,6 +67,14 @@ t.test('all ok', function(t) {
         t.ok(r1.closed && r2.closed, 'both should be closed');
     });
 
-})
+});
+
+// TODO:
+// test 0/1 argument to using (throw type error)
+// test non-function last argument
+// test lambda as resource
+// test resource without registered disposer
+// test multiple disposers, first one incompatible
+// test invalid args to registerDisposer
 
 
